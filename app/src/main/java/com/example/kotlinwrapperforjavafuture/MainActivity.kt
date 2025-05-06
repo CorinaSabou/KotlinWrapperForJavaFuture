@@ -1,7 +1,6 @@
 package com.example.kotlinwrapperforjavafuture
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -26,9 +25,9 @@ class MainActivity : ComponentActivity() {
         setContent {
             KotlinWrapperForJavaFutureTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    val writeEvents = viewModel.writeEvent.collectAsState()
+                    val state = viewModel.viewState.collectAsState()
                     Log(
-                        lines = writeEvents.value,
+                        lines = state.value,
                         modifier = Modifier.padding(innerPadding)
                     )
                 }

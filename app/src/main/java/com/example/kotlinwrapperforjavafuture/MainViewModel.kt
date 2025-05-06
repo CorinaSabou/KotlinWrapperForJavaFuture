@@ -7,24 +7,24 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class MainViewModel(private val repository: DataRepository) : ViewModel() {
-    private val mutableWriteEvent = MutableStateFlow(listOf("Hello Android!"))
-    val writeEvent = mutableWriteEvent
+    private val mutableViewState = MutableStateFlow(listOf("Hello Android!"))
+    val viewState = mutableViewState
 
     init {
         viewModelScope.launch {
-            computeAndWrite { repository.kotlinFunctionWithEmptyContinuation().toString() }
-            computeAndWrite { repository.kotlinFunctionWithIntContinuation().toString() }
-            computeAndWrite {
+            runAndUpdateState { repository.kotlinFunctionWithEmptyContinuation().toString() }
+            runAndUpdateState { repository.kotlinFunctionWithIntContinuation().toString() }
+            runAndUpdateState {
                 val byteArray = ByteArray(0).plus(1).plus(2).plus(3)
                 repository.kotlinFunctionWithByteArrayContinuation(byteArray).toList().toString()
             }
         }
     }
 
-    private fun computeAndWrite(block: suspend () -> String) {
+    private fun runAndUpdateState(block: suspend () -> String) {
         viewModelScope.launch {
             block().let { result ->
-                mutableWriteEvent.update { list -> list.plus(result) }
+                mutableViewState.update { list -> list.plus(result) }
                 println("KWFJF: $result")
             }
         }
